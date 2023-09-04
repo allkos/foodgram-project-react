@@ -1,4 +1,3 @@
-from django.conf import settings
 from rest_framework.exceptions import ValidationError
 from rest_framework import serializers
 
@@ -16,27 +15,19 @@ def validate_ingredients(value):
 
 def validate_tags(value):
     if not value:
-        raise ValidationError(
-            "Необходимо выбрать тег или теги"
-        )
+        raise ValidationError('Укажите тег!')
     return value
 
 
 def validate_cooking_time(value):
     if not value or value <= 1:
-        raise ValidationError(
-            f"Время приготовления не может быть пустым, или быть "
-            f"меньше 1-й минуты."
-        )
+        raise ValidationError('Укажите время приготовления!')
     return value
 
 
 def validate_amount(value):
     if not value or value < 1:
-        raise ValidationError(
-            f"Количество ингредиентов не может быть пустым, "
-            f"или быть меньше чем 1"
-        )
+        raise ValidationError('Заполните ингридиентами!')
     return value
 
 
@@ -44,12 +35,12 @@ def validate_subscribed(data, request_user):
     author = data["author"]
     if request_user == author:
         raise serializers.ValidationError(
-            "Вы не можете подписаться на самого себя."
+            "Вы не можете подписаться на самого себя!"
         )
     if Subscription.objects.filter(
         user=request_user, author=author
     ).exists():
         raise serializers.ValidationError(
-            "Вы уже подписаны на этого автора."
+            "Вы уже подписаны на этого автора!"
         )
     return data

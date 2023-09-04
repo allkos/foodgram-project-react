@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+
 class User(AbstractUser):
     email = models.EmailField(
         verbose_name='Электронная почта',
@@ -24,6 +25,7 @@ class User(AbstractUser):
         max_length=150,
         verbose_name="Фамилия"
     )
+
     class Meta:
         ordering = ('username',)
         verbose_name = 'Пользователь'
@@ -53,4 +55,3 @@ class Subscription(models.Model):
 
     def __str__(self):
         return f'{self.user.username} подписан на {self.author.username}'
-    

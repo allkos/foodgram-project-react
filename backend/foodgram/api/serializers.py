@@ -4,28 +4,19 @@ from drf_extra_fields.fields import Base64ImageField
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 
-from api.validators import (
-    validate_cooking_time,
-    validate_ingredients,
-    validate_subscribed,
-    validate_tags
-)
+from api.validators import (validate_cooking_time, validate_tags,
+                            validate_ingredients, validate_subscribed)
 
 from users.models import User, Subscription
-from recipes.models import (
-    IngredientRecipe,
-    ShoppingCart,
-    Ingredient,
-    Favorite,
-    Recipe,
-    Tag
-)
+from recipes.models import (ShoppingCart, IngredientRecipe, Ingredient,
+                            Favorite, Tag, Recipe)
 
 
 class UserCreateSerializerCustom(UserCreateSerializer):
     class Meta:
         model = User
-        fields = ("email", "id", "username", "first_name", "last_name", "password")
+        fields = ("email", "id", "username", "first_name",
+                  "last_name", "password")
 
         extra_kwargs = {
             'email': {'required': True},
@@ -41,7 +32,8 @@ class UserSerializerCustom(UserSerializer):
 
     class Meta:
         model = User
-        fields = ("email", "id", "username", "first_name", "last_name", "is_subscribed")
+        fields = ("email", "id", "username", "first_name",
+                  "last_name", "is_subscribed")
 
     lookup_field = 'username'
 
@@ -85,7 +77,9 @@ class IngredientAddSerializer(serializers.ModelSerializer):
 
 class IngredientRecipeSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source='ingredient.name')
-    measurement_unit = serializers.ReadOnlyField(source='ingredient.measurement_unit')
+    measurement_unit = serializers.ReadOnlyField(
+        source='ingredient.measurement_unit'
+    )
     id = serializers.IntegerField(source='ingredient.id', read_only=True)
 
     class Meta:
@@ -104,7 +98,8 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subscription
-        fields = ("id", "username", "first_name", "last_name", "is_subscribed", "recipes", 'recipes_count')
+        fields = ("id", "username", "first_name", "last_name",
+                  "is_subscribed", "recipes", 'recipes_count')
 
     def validate(self, data):
         request_user = self.context["request"].user
@@ -149,7 +144,8 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ("id", "author", "ingredients", "tags", "image", "name", "text", "cooking_time")
+        fields = ("id", "author", "ingredients", "tags",
+                  "image", "name", "text", "cooking_time")
 
     def validate(self, data):
         ingredients = data["ingredients"]
@@ -222,7 +218,9 @@ class RecipeReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ("id", "tags", "author", "ingredients", "is_favorited", "is_in_shopping_cart", "name", "image", "text", "cooking_time")
+        fields = ("id", "tags", "author", "ingredients", "is_favorited",
+                  "is_in_shopping_cart", "name", "image", "text",
+                  "cooking_time")
 
     def get_ingredients(self, obj):
         ingredients_list = IngredientRecipe.objects.filter(recipe=obj)
